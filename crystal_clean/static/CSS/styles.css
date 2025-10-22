@@ -1,0 +1,40 @@
+/* Кастомные стили для дополнения Bootstrap */
+body {
+    font-family: "Inter", sans-serif;
+}
+
+/* Hero Section: Фон с легким градиентом */
+section.bg-light {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+/* Кнопки: Добавляем легкую анимацию при наведении */
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+}
+
+.btn-outline-primary:hover {
+    transform: translateY(-2px);
+}
+
+/* Карточки: Плавный подъем при наведении */
+.card:hover {
+    transform: translateY(-5px);
+    transition: transform 0.3s ease;
+}
+
+/* Footer: Ховер для ссылок */
+footer a.text-light:hover {
+    color: #2563eb !important;
+}
+
+footer .bg-secondary:hover {
+    background-color: #2563eb !important;
+}
+
+/* Форма: Стилизация полей для соответствия дизайну */
+.form-control:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 0.25rem rgba(37, 99, 235, 0.25);
+}

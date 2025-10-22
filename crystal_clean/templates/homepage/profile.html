@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <h2 class="text-center display-5 fw-bold mb-5">Ваш профиль</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card border-0 shadow-sm p-4">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-user-circle fa-4x text-primary opacity-50"></i>
+                    </div>
+                    <h3 class="text-center h5 mb-3">Информация о профиле</h3>
+                    <div class="mb-3">
+                        <p><strong>Имя:</strong> {{ user.username }}</p>
+                        <p><strong>Адрес электронной почты:</strong> {{ user.email|default:"Не указан" }}</p>
+                        <p><strong>Дата регистрации:</strong> {{ user.date_joined|date:"d.m.Y" }}</p>
+                    </div>
+                    <a href="{% url 'homepage:index' %}#contact" class="btn btn-primary w-100 mb-3">
+                        <i class="fas fa-paper-plane"></i> Создать новый заказ
+                    </a>
+                    <a href="{% url 'password_change' %}" class="btn btn-outline-primary w-100">
+                        <i class="fas fa-key"></i> Сменить пароль
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% if orders %}
+        <h3 class="text-center h4 fw-bold mt-5 mb-3">Ваши заказы</h3>
+        <div class="row g-4">
+            {% for order in orders %}
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body">
+                        <h4 class="card-title h6">Заказ #{{ order.id }}</h4>
+                        <p class="card-text text-muted">
+                            <strong>Дата:</strong> {{ order.created_at|date:"d.m.Y H:i" }}<br>
+                            <strong>Вид работ:</strong> {{ order.service_type }}<br>
+                            <strong>Статус:</strong> {{ order.status }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-center text-muted">Сейчас вы не имеете заказов</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
