@@ -8,9 +8,8 @@
 Склонируйте репозиторий проекта с помощью Git:
 
 git clone https://github.com/kiruha211/crystal_clean
-cd crystalclean
 
-Замените https://github.com/kiruha211/crystal_clean на URL вашего репозитория.
+Замените https://github.com/<название_аккаунта>/crystal_clean на URL вашего репозитория.
 
 2. Создание виртуального окружения
 
@@ -32,7 +31,22 @@ venv\Scripts\activate
 
 pip install -r requirements.txt
 
-4. Запуск проекта
+4. Применение миграций
+
+Создайте и примените миграции для настройки базы данных:
+
+python manage.py makemigrations
+python manage.py migrate
+
+5. Создание суперпользователя
+
+Создайте администратора для доступа к админ-панели Django:
+
+python manage.py createsuperuser
+
+Следуйте инструкциям, чтобы указать имя пользователя, email и пароль.
+
+6. Запуск проекта
 
 Перейдите в папку crystal_clean, и в терминале Bash запустите локальный сервер командой:
 
