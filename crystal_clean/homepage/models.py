@@ -33,7 +33,6 @@ class Order(models.Model):
     creator = models.ForeignKey( 
         User, 
         on_delete=models.CASCADE,
-        default=None,
         verbose_name='Создатель заказа' 
     ) 
 

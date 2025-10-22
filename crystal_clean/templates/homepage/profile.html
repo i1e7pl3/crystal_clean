@@ -1,49 +1,96 @@
 {% extends "base.html" %}
 {% block content %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center display-5 fw-bold mb-5">Страница пользователя {{ profile.username }}</h2>
+        <div class="row justify-content-center mb-5">
+            <div class="col-md-8 col-lg-6">
+                <div class="card border-0 shadow-sm p-4 text-center">
+                    <ul class="list-group list-group-horizontal justify-content-center mb-3">
+                        <li class="list-group-item text-muted">Регистрация: {{ profile.date_joined|date:"d.m.Y" }}</li>
+                        <li class="list-group-item text-muted">Роль: {% if profile.is_staff %}Админ{% else %}Пользователь{% endif %}</li>
+                    </ul>
+                    {% if user.is_authenticated and request.user == profile %}
+                        <a class="btn btn-primary btn-sm" href="{% url 'password_change' %}">
+                            <i class="fas fa-lock"></i> Изменить пароль
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <section class="py-5">
     <div class="container">
-        <h2 class="text-center display-5 fw-bold mb-5">Ваш профиль</h2>
-        <div class="row justify-content-center">
-            <div class="col-md-8 col-lg-6">
-                <div class="card border-0 shadow-sm p-4">
-                    <div class="text-center mb-4">
-                        <i class="fas fa-user-circle fa-4x text-primary opacity-50"></i>
-                    </div>
-                    <h3 class="text-center h5 mb-3">Информация о профиле</h3>
-                    <div class="mb-3">
-                        <p><strong>Имя:</strong> {{ user.username }}</p>
-                        <p><strong>Адрес электронной почты:</strong> {{ user.email|default:"Не указан" }}</p>
-                        <p><strong>Дата регистрации:</strong> {{ user.date_joined|date:"d.m.Y" }}</p>
-                    </div>
-                    <a href="{% url 'homepage:index' %}#contact" class="btn btn-primary w-100 mb-3">
-                        <i class="fas fa-paper-plane"></i> Создать новый заказ
-                    </a>
-                    <a href="{% url 'password_change' %}" class="btn btn-outline-primary w-100">
-                        <i class="fas fa-key"></i> Сменить пароль
-                    </a>
-                </div>
-            </div>
-        </div>
+        <h2 class="text-center display-5 fw-bold mb-5">Ваши заказы</h2>
         {% if orders %}
-        <h3 class="text-center h4 fw-bold mt-5 mb-3">Ваши заказы</h3>
-        <div class="row g-4">
-            {% for order in orders %}
-            <div class="col-md-6 col-lg-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <div class="card-body">
-                        <h4 class="card-title h6">Заказ #{{ order.id }}</h4>
-                        <p class="card-text text-muted">
-                            <strong>Дата:</strong> {{ order.created_at|date:"d.m.Y H:i" }}<br>
-                            <strong>Вид работ:</strong> {{ order.service_type }}<br>
-                            <strong>Статус:</strong> {{ order.status }}
-                        </p>
+            <div class="row g-4">
+                {% for order in orders %}
+                    <div class="col-md-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-header bg-primary text-white">
+                                Заказ от {{ order.created_at|date:"d.m.Y H:i" }}
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title h5">{{ order.name }} - {{ order.get_window_type_display }}</h5>
+                                <p class="card-text text-muted">
+                                    <strong>Телефон:</strong> {{ order.phone }}<br>
+                                    {% if order.email %}
+                                        <strong>Email:</strong> {{ order.email }}<br>
+                                    {% endif %}
+                                    <strong>Назначенное время:</strong> {{ order.get_preferred_time_display|default:"Не указано" }}<br>
+                                    {% if order.message %}
+                                        <strong>Комментарий:</strong> {{ order.message }}<br>
+                                    {% endif %}
+                                </p>
+                                {% if user.is_authenticated and request.user == order.creator %}
+                                    <div class="d-flex justify-content-between">
+                                        <a href="{% url 'homepage:order_edit' order.id %}" class="btn btn-primary btn-sm">
+                                            <i class="fas fa-edit"></i> Редактировать
+                                        </a>
+                                        <a href="{% url 'homepage:order_delete' order.id %}" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-trash"></i> Удалить
+                                        </a>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            {% if page_obj.has_other_pages %}
+                <nav aria-label="Page navigation" class="mt-5">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Назад</a>
+                            </li>
+                        {% endif %}
+                        {% for num in page_obj.paginator.page_range %}
+                            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                            </li>
+                        {% endfor %}
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Вперед</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+        {% else %}
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-6">
+                    <div class="card border-0 shadow-sm p-4 text-center">
+                        <p class="text-muted mb-0">У вас пока нет заказов.</p>
+                        <a href="{% url 'homepage:index' %}#contact" class="btn btn-primary btn-sm mt-3">
+                            <i class="fas fa-calendar-alt"></i> Создать заказ
+                        </a>
                     </div>
                 </div>
             </div>
-            {% empty %}
-            <p class="text-center text-muted">Сейчас вы не имеете заказов</p>
-            {% endfor %}
-        </div>
         {% endif %}
     </div>
 </section>

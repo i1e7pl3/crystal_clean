@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center display-5 fw-bold mb-5">Удаление заказа</h2>
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card border-0 shadow-sm p-4">
+                    {% if messages %}
+                        <div class="container mt-3">
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <p class="text-muted text-center mb-4">
+                        Вы уверены, что хотите удалить заказ <strong>{{ object.name }} - {{ object.get_window_type_display }}</strong>?
+                    </p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash"></i> Удалить
+                            </button>
+                            <a href="{% url 'homepage:profile' request.user.username %}" class="btn btn-secondary btn-sm">
+                                <i class="fas fa-arrow-left"></i> Отмена
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

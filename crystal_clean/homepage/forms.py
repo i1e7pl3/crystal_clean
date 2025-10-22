@@ -1,6 +1,6 @@
 from django.core.validators import RegexValidator
 from django import forms
-from .models import Order
+from .models import Order, User
 
 class OrderForm(forms.ModelForm):
     class Meta:
@@ -14,3 +14,12 @@ class OrderForm(forms.ModelForm):
             'preferred_time': forms.Select(attrs={'class': 'form-select'}),
             'message': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Ваше сообщение (необязательно)'}),
         }
+
+class ProfileForm(forms.ModelForm): 
+ 
+    class Meta: 
+        model = User 
+        fields = [ 
+            'username',
+            'email' 
+        ]
